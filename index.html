@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enregistrement - Air Arlette</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#408ABA;
+  --secondary:#00ADEF;
+  --bg:#F5F5F5;
+  --text:#333;
+  --btn:#FF4136;
+  --btn-hover:#e03e2d;
+}
+body{margin:0;font-family:'Montserrat',sans-serif;background:var(--bg);display:flex;flex-direction:column;align-items:center;min-height:100vh;}
+header{width:100%;background:var(--primary);display:flex;align-items:center;justify-content:space-between;padding:12px 24px;padding-left:34px;color:#fff;}
+header img{height:50px;margin-left:10px;object-fit:contain;}
+main{flex:1; display:flex; align-items:center; justify-content:center;width:100%;padding:24px 16px; min-height: calc(100vh - 80px);}
+form.boarding-pass{background:#fff;border-radius:20px;box-shadow:0 8px 20px rgba(0,0,0,0.2);width:100%; max-width:900px;padding:32px; position:relative;border-top:6px solid var(--secondary);}
+form h1{text-align:center;color:var(--primary);margin-bottom:24px;font-size:1.5rem;}
+label{display:block;margin-top:16px;font-weight:600;color:var(--text);}
+.form-columns{display:flex;gap:16px;flex-wrap:wrap;align-items:stretch;}
+.form-left,.form-right{flex:1 1 250px;display:flex;flex-direction:column;}
+.form-left{padding-right:40px;position:relative;}
+.form-left::after{content:"";position:absolute;top:0;right:0;width:2px;height:100%;background:#D4D4D4;box-shadow: 1px 0 4px rgba(0,0,0,0.1);}
+input, select, button{width:100%;padding:14px;margin-top:8px;border-radius:6px;border:1px solid #ccc;font-size:1rem;box-sizing:border-box;}
+input:focus-visible,select:focus-visible{outline:3px solid var(--secondary);outline-offset:2px;}
+button{background:var(--btn);color:#fff;border:none;cursor:pointer;font-weight:600;margin-top:24px;transition:transform 0.15s, background 0.3s;font-size:1.1rem;}
+button:hover{background:var(--btn-hover);}
+button:active{transform:scale(0.96);}
+button[disabled]{opacity:.65;cursor:not-allowed;}
+.input-icon{position: relative;margin-top:16px;}
+.input-icon input{padding-left:36px;}
+.input-icon .material-icons{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#333;font-size:20px;}
+.form-right{background: linear-gradient(180deg,#fff,#f0f8ff);border-radius:16px;padding:20px;display:flex;flex-direction:column;justify-content:center;box-shadow: 0 6px 20px rgba(0,0,0,0.15);}
+.flight-card{display:flex;justify-content:space-between;width:100%;gap:12px;}
+.flight-subsection{flex:1;text-align:center;}
+.plane-icon{font-size:36px;color: var(--secondary);}
+.location{font-weight:600;font-size:1rem;color: var(--text);}
+.date, .time{font-size:0.9rem;color:#555;}
+.flight-number{text-align:center;margin-top:20px;font-size:1.4rem;font-weight:700;color:var(--primary);}
+.confetti {position: fixed;top: -10px;border-radius: 2px;opacity: 0.9;animation: fall linear forwards;}
+@keyframes fall {0% {transform: translateY(0) translateX(0) rotate(0deg); opacity: 1;}100% {transform: translateY(100vh) translateX(var(--dx, 0)) rotate(720deg); opacity: 0;}}
+#result{margin-top:12px;font-weight:600;text-align:center;}
+@media(max-width:640px){.form-columns{flex-direction:column;gap:16px;}.form-left::after{display:none;}.form-left{padding-right:0;margin-bottom:16px;}.flight-card{flex-direction:column; gap:12px;}}
+</style>
+</head>
+<body>
+<header>
+  <img src="https://raw.githubusercontent.com/DenisRoche03/invitation-fete/main/Logo/AirArletteBleu.png" alt="Logo Air Arlette">
+</header>
+
+<main>
+<form id="invitationForm" class="boarding-pass" novalidate>
+  <h1>Enregistrement à la fête</h1>
+  <div class="form-columns">
+    <div class="form-left">
+      <div class="input-icon"><span class="material-icons">person</span><input type="text" id="prenom" name="prenom" placeholder="Prénom" required /></div>
+      <div class="input-icon"><span class="material-icons">badge</span><input type="text" id="nom" name="nom" placeholder="Nom" required /></div>
+      <div class="input-icon"><span class="material-icons">email</span><input type="email" id="email" name="email" placeholder="Adresse mail" required /></div>
+      <label for="participation">Participez-vous ?</label>
+      <select id="participation" name="participation" required>
+        <option value="">-- Choisir --</option>
+        <option value="oui">Oui</option>
+        <option value="non">Non</option>
+      </select>
+      <div class="input-icon"><span class="material-icons">groups</span><input type="number" id="nb_personnes" name="nb_personnes" min="1" value="1" placeholder="Nb de personnes" required /></div>
+    </div>
+
+    <div class="form-right">
+      <div class="flight-card">
+        <div class="flight-subsection">
+          <span class="material-icons plane-icon">flight_takeoff</span>
+          <p class="location">Amanzé</p>
+          <p class="date">04 Avril 2026</p>
+          <p class="time">12:00</p>
+        </div>
+        <div class="flight-subsection">
+          <span class="material-icons plane-icon">flight_land</span>
+          <p class="location">La retraite</p>
+          <p class="date">?</p>
+          <p class="time">12:00</p>
+        </div>
+      </div>
+      <div class="flight-number"><span>AA1234</span></div>
+    </div>
+  </div>
+
+  <button type="submit" id="submitBtn"><span>Envoyer</span></button>
+  <p id="result"></p>
+</form>
+</main>
+
+<script>
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbwQZAC1BrnLyndTvt1AlSERvATWI5hYwW4dFZAzfx2O39A8yrKWKRy06Qi5EUSrYf3R4Q/exec";
+const LOCK_AFTER_SUCCESS = true;
+const ANTISPAM_DELAY = 30; 
+const form = document.getElementById("invitationForm");
+const submitBtn = document.getElementById("submitBtn");
+const fields = ["prenom","nom","email","participation","nb_personnes"];
+let isSubmitting = false;
+let cooldownTimer = null;
+
+/* Sauvegarde locale */
+fields.forEach(id => {
+  const el = document.getElementById(id);
+  if(!el) return;
+  const saved = localStorage.getItem(id);
+  if(saved) el.value = saved;
+  el.addEventListener("input", e => localStorage.setItem(id, e.target.value));
+});
+
+/* Confetti */
+function launchConfetti(count=40){
+  for(let i=0;i<count;i++){
+    const c=document.createElement("div");
+    c.className="confetti";
+    const hue=Math.floor(Math.random()*360);
+    const size=6+Math.random()*10;
+    const left=Math.random()*100;
+    const dx=(Math.random()*200-100)+"px";
+    const dur=(2+Math.random()*2).toFixed(2)+"s";
+    c.style.backgroundColor=`hsl(${hue},90%,55%)`;
+    c.style.left=left+"vw";
+    c.style.width=c.style.height=size+"px";
+    c.style.setProperty("--dx",dx);
+    c.style.animationDuration=dur;
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),parseFloat(dur)*1000);
+  }
+}
+
+/* Messages */
+const result = document.getElementById("result");
+function showMessage(msg, cls){ result.textContent=msg; result.className=cls||""; }
+function setLoading(state){
+  if(state){ submitBtn.disabled=true; submitBtn.innerHTML="<span>Envoi…</span>"; }
+  else { submitBtn.disabled=false; submitBtn.innerHTML="<span>Envoyer</span>"; }
+}
+
+/* Cooldown */
+function startCooldown(){
+  const until = Date.now() + ANTISPAM_DELAY*1000;
+  localStorage.setItem("cooldown_until", until);
+  updateCooldown();
+}
+function updateCooldown(){
+  clearInterval(cooldownTimer);
+  const until = parseInt(localStorage.getItem("cooldown_until")||0);
+  if(!until||until<=Date.now()){ localStorage.removeItem("cooldown_until"); submitBtn.disabled=false; submitBtn.innerHTML="<span>Envoyer</span>"; return; }
+  submitBtn.disabled=true;
+  function tick(){
+    const rem = Math.ceil((until-Date.now())/1000);
+    if(rem>0){ submitBtn.innerHTML=`⏳ Attendez ${rem}s`; }
+    else{ clearInterval(cooldownTimer); localStorage.removeItem("cooldown_until"); submitBtn.disabled=false; submitBtn.innerHTML="<span>Envoyer</span>"; }
+  }
+  tick();
+  cooldownTimer=setInterval(tick,1000);
+}
+updateCooldown();
+
+/* Submit */
+form.addEventListener("submit", e=>{
+  e.preventDefault();
+  if(isSubmitting) return;
+  if(!form.reportValidity()) return;
+  const prenom=document.getElementById("prenom").value.trim();
+  const nom=document.getElementById("nom").value.trim();
+  const email=document.getElementById("email").value.trim();
+  if(email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ showMessage("Adresse e-mail invalide.","err"); return; }
+
+  isSubmitting=true;
+  setLoading(true);
+  showMessage("");
+
+  const params = new FormData(form);
+  fetch(SHEET_URL,{method:"POST",body:params})
+  .then(res=>res.text())
+  .then(text=>{
+    if(/^OK/i.test(text)){ showMessage(`Merci ${prenom} ${nom}, votre enregistrement est confirmé ! 🎊`,"ok"); launchConfetti(); }
+    else if(/^UPDATED/i.test(text)){ showMessage(`Vos informations ont été mises à jour, ${prenom} ${nom}.`,"ok"); launchConfetti(); }
+    else if(/^NO_CHANGE/i.test(text)){ showMessage(`Aucune modification détectée pour ${prenom} ${nom}.`,"warn"); }
+    else if(/^SPAM_DETECTED/i.test(text)){ showMessage("Spam détecté.","err"); }
+    else if(/^MISSING_FIELDS/i.test(text)){ showMessage("Veuillez compléter tous les champs.","err"); }
+    else { showMessage("Réponse serveur : "+text,"warn"); }
+
+    form.reset();
+    fields.forEach(f=>localStorage.removeItem(f));
+    if(LOCK_AFTER_SUCCESS){ submitBtn.disabled=true; submitBtn.innerHTML="<span>✔ Envoyé</span>"; submitBtn.style.backgroundColor="#999"; submitBtn.style.cursor="not-allowed"; }
+    else{ startCooldown(); }
+  })
+  .catch(err=>{ console.error(err); showMessage("Erreur réseau.","err"); startCooldown(); })
+  .finally(()=>{ isSubmitting=false; setLoading(false); });
+});
+</script>
+</body>
+</html>
