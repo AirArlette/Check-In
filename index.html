@@ -46,6 +46,9 @@ button[disabled]{opacity:.65;cursor:not-allowed;}
 @keyframes fall {0% {transform: translateY(0) translateX(0) rotate(0deg); opacity: 1;}100% {transform: translateY(100vh) translateX(var(--dx, 0)) rotate(720deg); opacity: 0;}}
 #result{margin-top:12px;font-weight:600;text-align:center;}
 @media(max-width:640px){.form-columns{flex-direction:column;gap:16px;}.form-left::after{display:none;}.form-left{padding-right:0;margin-bottom:16px;}.flight-card{flex-direction:column; gap:12px;}}
+@keyframes spin { 
+  to { transform: rotate(360deg); } 
+}
 </style>
 </head>
 <body>
@@ -90,6 +93,19 @@ button[disabled]{opacity:.65;cursor:not-allowed;}
   </div>
 
   <button type="submit" id="submitBtn"><span>Envoyer</span></button>
+    <div id="loading" style="display:none; text-align:center; margin-top:12px; color:#408ABA; font-weight:500;">
+    <div class="spinner" style="
+        margin:8px auto;
+        width:28px;
+        height:28px;
+        border:4px solid #ddd;
+        border-top-color:#408ABA;
+        border-radius:50%;
+        animation:spin 0.9s linear infinite;">
+    </div>
+  Envoi en cours... Merci de patienter ✈️
+</div>
+
   <p id="result"></p>
 </form>
 </main>
@@ -137,8 +153,16 @@ function launchConfetti(count=40){
 const result = document.getElementById("result");
 function showMessage(msg, cls){ result.textContent=msg; result.className=cls||""; }
 function setLoading(state){
-  if(state){ submitBtn.disabled=true; submitBtn.innerHTML="<span>Envoi…</span>"; }
-  else { submitBtn.disabled=false; submitBtn.innerHTML="<span>Envoyer</span>"; }
+ const loadingEl = document.getElementById("loading");
+  if(state){
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = "<span>Envoi…</span>";
+    if (loadingEl) loadingEl.style.display = "block";
+  } else {
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = "<span>Envoyer</span>";
+    if (loadingEl) loadingEl.style.display = "none";
+  }
 }
 
 /* Cooldown */
