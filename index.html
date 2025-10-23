@@ -187,37 +187,79 @@ function updateCooldown(){
 updateCooldown();
 
 /* Submit */
-form.addEventListener("submit", e=>{
+form.addEventListener("submit", e => {
   e.preventDefault();
   if(isSubmitting) return;
   if(!form.reportValidity()) return;
-  const prenom=document.getElementById("prenom").value.trim();
-  const nom=document.getElementById("nom").value.trim();
-  const email=document.getElementById("email").value.trim();
-  if(email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ showMessage("Adresse e-mail invalide.","err"); return; }
 
-  isSubmitting=true;
+  const prenom = document.getElementById("prenom").value.trim();
+  const nom = document.getElementById("nom").value.trim();
+  const email = document.getElementById("email").value.trim();
+
+  if(email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    showMessage("Adresse e-mail invalide.","err");
+    return;
+  }
+
+  isSubmitting = true;
   setLoading(true);
   showMessage("");
 
-  const params = new FormData(form);
-  fetch(SHEET_URL,{method:"POST",body:params})
-  .then(res=>res.text())
-  .then(text=>{
-    if(/^OK/i.test(text)){ showMessage(`Merci ${prenom} ${nom}, votre enregistrement est confirmé ! 🎊`,"ok"); launchConfetti(); }
-    else if(/^UPDATED/i.test(text)){ showMessage(`Vos informations ont été mises à jour, ${prenom} ${nom}.`,"ok"); launchConfetti(); }
-    else if(/^NO_CHANGE/i.test(text)){ showMessage(`Aucune modification détectée pour ${prenom} ${nom}.`,"warn"); }
-    else if(/^SPAM_DETECTED/i.test(text)){ showMessage("Spam détecté.","err"); }
-    else if(/^MISSING_FIELDS/i.test(text)){ showMessage("Veuillez compléter tous les champs.","err"); }
-    else { showMessage("Réponse serveur : "+text,"warn"); }
+  // ✅ Remplacement ici :
+  const formData = new URLSearchParams();
+  formData.append("prenom", prenom);
+  formData.append("nom", nom);
+  formData.append("email", email);
+  formData.append("participation", document.getElementById("participation").value);
+  formData.append("nb_personnes", document.getElementById("nb_personnes").value);
+
+  fetch(SHEET_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: formData
+  })
+  .then(res => res.text())
+  .then(text => {
+    console.log("Réponse brute :", text);
+    if(/^OK/i.test(text)){
+      showMessage(`Merci ${prenom} ${nom}, votre enregistrement est confirmé ! 🎊`, "ok");
+      launchConfetti();
+    }
+    else if(/^UPDATED/i.test(text)){
+      showMessage(`Vos informations ont été mises à jour, ${prenom} ${nom}.`, "ok");
+      launchConfetti();
+    }
+    else if(/^NO_CHANGE/i.test(text)){
+      showMessage(`Aucune modification détectée pour ${prenom} ${nom}.`, "warn");
+    }
+    else if(/^MISSING_FIELDS/i.test(text)){
+      showMessage("Veuillez compléter tous les champs.","err");
+    }
+    else{
+      showMessage("Réponse serveur : " + text, "warn");
+    }
 
     form.reset();
-    fields.forEach(f=>localStorage.removeItem(f));
-    if(LOCK_AFTER_SUCCESS){ submitBtn.disabled=true; submitBtn.innerHTML="<span>✔ Envoyé</span>"; submitBtn.style.backgroundColor="#999"; submitBtn.style.cursor="not-allowed"; }
-    else{ startCooldown(); }
+    fields.forEach(f => localStorage.removeItem(f));
+    if(LOCK_AFTER_SUCCESS){
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = "<span>✔ Envoyé</span>";
+      submitBtn.style.backgroundColor = "#999";
+      submitBtn.style.cursor = "not-allowed";
+    }
+    else{
+      startCooldown();
+    }
   })
-  .catch(err=>{ console.error(err); showMessage("Erreur réseau.","err"); startCooldown(); })
-  .finally(()=>{ isSubmitting=false; setLoading(false); });
+  .catch(err => {
+    console.error(err);
+    showMessage("Erreur réseau.","err");
+    startCooldown();
+  })
+  .finally(() => {
+    isSubmitting = false;
+    setLoading(false);
+  });
 });
 </script>
 </body>
