@@ -205,7 +205,6 @@ form.addEventListener("submit", e => {
   setLoading(true);
   showMessage("");
 
-  // ✅ Remplacement ici :
   const formData = new URLSearchParams();
   formData.append("prenom", prenom);
   formData.append("nom", nom);
@@ -237,15 +236,14 @@ form.addEventListener("submit", e => {
     }
     else{
       showMessage("Réponse serveur : " + text, "warn");
+      setLoading(false);
     }
 
     form.reset();
     fields.forEach(f => localStorage.removeItem(f));
     if(LOCK_AFTER_SUCCESS){
       submitBtn.disabled = true;
-      submitBtn.innerHTML = "<span>✔ Envoyé</span>";
-      submitBtn.style.backgroundColor = "#999";
-      submitBtn.style.cursor = "not-allowed";
+      submitBtn.style.display = "none"
     }
     else{
       startCooldown();
@@ -255,12 +253,21 @@ form.addEventListener("submit", e => {
     console.error(err);
     showMessage("Erreur réseau.","err");
     startCooldown();
+    setLoading(false);
   })
   .finally(() => {
     isSubmitting = false;
     setLoading(false);
   });
 });
+  
+function setLoading(state){
+  if(state){
+    submitBtn.style.display = "none"; // bouton disparaît
+  } else {
+    submitBtn.style.display = "block"; // bouton réapparaît
+  }
+}
 </script>
 </body>
 </html>
