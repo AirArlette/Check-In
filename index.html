@@ -152,17 +152,6 @@ function launchConfetti(count=40){
 /* Messages */
 const result = document.getElementById("result");
 function showMessage(msg, cls){ result.textContent=msg; result.className=cls||""; }
-function setLoading(state){
- const loadingEl = document.getElementById("loading");
-  if(state){
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = "<span>Envoi…</span>";
-    if (loadingEl) loadingEl.style.display = "block";
-  } else {
-    submitBtn.disabled = false;
-    submitBtn.innerHTML = "<span>Envoyer</span>";
-    if (loadingEl) loadingEl.style.display = "none";
-  }
 }
 
 /* Cooldown */
